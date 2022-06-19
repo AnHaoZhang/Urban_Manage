@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.urban.function.mapper.StallInfoMapper">
+
+    <resultMap type="StallInfo" id="StallInfoResult">
+        <result property="stallsId"    column="stalls_id"    />
+        <result property="stallsType"    column="stalls_type"    />
+        <result property="address"    column="address"    />
+        <result property="lng"    column="lng"    />
+        <result property="lat"    column="lat"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectStallInfoVo">
+        select stalls_id, stalls_type, address, lng, lat, status, create_by, create_time, update_by, update_time, remark from stall_info
+    </sql>
+
+    <select id="selectStallInfoList" parameterType="StallInfo" resultMap="StallInfoResult">
+        <include refid="selectStallInfoVo"/>
+        <where>
+            <if test="stallsType != null  and stallsType != ''"> and stalls_type = #{stallsType}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="lng != null  and lng != ''"> and lng = #{lng}</if>
+            <if test="lat != null  and lat != ''"> and lat = #{lat}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="getStalladdressInfoList" parameterType="date" resultMap="StallInfoResult">
+        <include refid="selectStallInfoVo"/>
+        <where>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="lng != null  and lng != ''"> and lng = #{lng}</if>
+            <if test="lat != null  and lat != ''"> and lat = #{lat}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectStallInfoByStallsId" parameterType="Long" resultMap="StallInfoResult">
+        <include refid="selectStallInfoVo"/>
+        where stalls_id = #{stallsId}
+    </select>
+
+    <insert id="insertStallInfo" parameterType="StallInfo" useGeneratedKeys="true" keyProperty="stallsId">
+        insert into stall_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="stallsType != null and stallsType != ''">stalls_type,</if>
+            <if test="address != null and address != ''">address,</if>
+            <if test="lng != null">lng,</if>
+            <if test="lat != null">lat,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="stallsType != null and stallsType != ''">#{stallsType},</if>
+            <if test="address != null and address != ''">#{address},</if>
+            <if test="lng != null">#{lng},</if>
+            <if test="lat != null">#{lat},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStallInfo" parameterType="StallInfo">
+        update stall_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="stallsType != null and stallsType != ''">stalls_type = #{stallsType},</if>
+            <if test="address != null and address != ''">address = #{address},</if>
+            <if test="lng != null">lng = #{lng},</if>
+            <if test="lat != null">lat = #{lat},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where stalls_id = #{stallsId}
+    </update>
+
+    <delete id="deleteStallInfoByStallsId" parameterType="Long">
+        delete from stall_info where stalls_id = #{stallsId}
+    </delete>
+
+    <delete id="deleteStallInfoByStallsIds" parameterType="String">
+        delete from stall_info where stalls_id in
+        <foreach item="stallsId" collection="array" open="(" separator="," close=")">
+            #{stallsId}
+        </foreach>
+    </delete>
+</mapper>
